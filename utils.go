@@ -63,7 +63,7 @@ func Substr(str string, start, length int) string {
 	return string(rs[start:end])
 }
 
-func FileIsExist(path string) bool {
+func FileExist(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil || os.IsExist(err)
 }
