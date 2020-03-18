@@ -68,8 +68,17 @@ func FileExist(path string) bool {
 	return err == nil || os.IsExist(err)
 }
 
-func InIntSlice(islice []int, i int) bool {
-	for _, value := range islice {
+func InIntSlice(s []int, i int) bool {
+	for _, value := range s {
+		if value == i {
+			return true
+		}
+	}
+	return false
+}
+
+func InSlice(s []*interface{}, i interface{}) bool {
+	for _, value := range s {
 		if value == i {
 			return true
 		}
