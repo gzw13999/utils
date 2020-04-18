@@ -106,7 +106,31 @@ func Atoi(s string, defaultVal ...int) int {
 }
 
 func Itoa(i int) string {
-
 	return strconv.Itoa(i)
+}
 
+func Atob(s string) bool {
+	if s == "1" || s == "true" {
+		return true
+	} else {
+		return false
+	}
+}
+
+func Atof32(s string, defaultVal ...float32) float32 {
+	v, err := strconv.ParseFloat(s, 32)
+	if err != nil {
+		return defaultVal[0]
+	} else {
+		return float32(v)
+	}
+}
+
+func Atof64(s string, defaultVal ...float64) float64 {
+	v, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		return defaultVal[0]
+	} else {
+		return v
+	}
 }
