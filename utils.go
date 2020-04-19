@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+	"math"
 	"os"
 	"strconv"
 )
@@ -133,4 +135,20 @@ func Atof64(s string, defaultVal ...float64) float64 {
 	} else {
 		return v
 	}
+}
+
+// uint 代表小数位数，格式位 0.000001 如果是几位就指定为几位,有多余小数情况
+func truncateNaive(f float64, unit float64) float64 {
+	return math.Trunc(f/unit) * unit
+}
+
+func Decimal(value float64) float64 {
+	value, _ = strconv.ParseFloat(fmt.Sprintf("%.7f", value), 64)
+	return value
+}
+func ToFixed(f float64, places int) float64 {
+	shift := math.Pow(10, float64(places))
+	fv := 0.0000000001 + f //对浮点数产生.xxx999999999 计算不准进行处理
+	//return math.Floor(fv*shift+.5) / shift //四舍五入
+	return math.Floor(fv*shift) / shift
 }
