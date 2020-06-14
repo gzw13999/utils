@@ -11,6 +11,13 @@ func VerifyEmail(email string) bool {
 	return reg.MatchString(email)
 }
 
+//匹配日期
+func VerifyDate(date string) bool {
+	pattern := `\d{4}-\d{2}-\d{2}`
+	reg := regexp.MustCompile(pattern)
+	return reg.MatchString(date)
+}
+
 //匹配国内手机号码
 func VerifyPhone(s string) bool {
 	reg := regexp.MustCompile(`^1(3|4|5|6|7|8)\d{9}$`)
