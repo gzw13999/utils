@@ -13,7 +13,7 @@ func VerifyEmail(email string) bool {
 
 //匹配日期
 func VerifyDate(date string) bool {
-	pattern := `\d{4}-\d{2}-\d{2}`
+	pattern := `^(((?:19|20)\d\d)-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]))$`
 	reg := regexp.MustCompile(pattern)
 	return reg.MatchString(date)
 }
