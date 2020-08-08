@@ -97,6 +97,15 @@ func InStringSlice(islice []string, i string) bool {
 	return false
 }
 
+func StrLen(s string)int{
+	if s==""{
+		return 0
+	}else{
+		return len([]rune(s))
+	}
+
+}
+
 func Atoi(s string, defaultVal ...int) int {
 
 	if i, err := strconv.Atoi(s); err != nil {
