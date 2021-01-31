@@ -25,8 +25,13 @@ func VerifyPhone(s string) bool {
 }
 
 //匹配密码
-func VerifyPassword(s string) bool {
+func VerifyUsername(s string) bool {
+	reg := regexp.MustCompile("^[a-zA-Z0-9_-]{6,16}$")
+	return reg.MatchString(s)
+}
 
+//匹配密码
+func VerifyPassword(s string) bool {
 	reg := regexp.MustCompile("^[a-zA-Z0-9-*/+.~!@#$%^&*()]{6,20}$")
 	return reg.MatchString(s)
 }

@@ -67,7 +67,6 @@ func Substr(str string, start, length int) string {
 }
 
 func TimeSubDays(t1, t2 time.Time) int {
-
 	if t1.Location().String() != t2.Location().String() {
 		return -1
 	}
@@ -172,6 +171,7 @@ func Atof32(s string, defaultVal ...float32) float32 {
 		return float32(v)
 	}
 }
+
 
 func Atof64(s string, defaultVal ...float64) float64 {
 	v, err := strconv.ParseFloat(s, 64)
