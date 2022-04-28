@@ -38,7 +38,7 @@ func FileGetExt(file string) string {
 	return f[1:]
 }
 
-func GetCurrentDirectory()string{
+func GetCurrentDir()string{
 	if dir, err := filepath.Abs(filepath.Dir(os.Args[0])); err != nil {
 		return ""
 	} else {
