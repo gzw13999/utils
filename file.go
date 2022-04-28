@@ -38,6 +38,15 @@ func FileGetExt(file string) string {
 	return f[1:]
 }
 
+func GetCurrentDirectory()string{
+	if dir, err := filepath.Abs(filepath.Dir(os.Args[0])); err != nil {
+		return ""
+	} else {
+		return strings.Replace(dir, "\\", "/", -1)
+	}
+}
+
+
 func FileGetModTime(path string) int64 {
 	path = strings.Replace(path, "\\", "/", -1)
 	f, err := os.Open(path)
