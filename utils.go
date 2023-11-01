@@ -160,16 +160,21 @@ func Atoi(s any, defaultVal ...int) int {
 	}
 }
 
-func Itoa(i int) string {
-	return strconv.Itoa(i)
-}
-
-func Atob(s string) bool {
-	if s == "1" || s == "true" {
-		return true
-	} else {
+func Atob(s any) bool {
+	switch s := s.(type) {
+	case string:
+		if i, err := strconv.ParseBool(s); err != nil {
+			return false
+		} else {
+			return i
+		}
+	default:
 		return false
 	}
+}
+
+func Itoa(i int) string {
+	return strconv.Itoa(i)
 }
 
 func Atof32(s string, defaultVal ...float32) float32 {
