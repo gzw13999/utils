@@ -152,6 +152,10 @@ func Atoi(s interface{}, defaultVal ...int) int {
 		} else {
 			return i
 		}
+	case float32:
+		return int(math.Round(float64(s)))
+	case float64:
+		return int(math.Round(s))
 	case int:
 		return s
 	default:
