@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"fmt"
+	"io"
 )
 
 func FileIsExist(path string) bool {
@@ -61,4 +63,22 @@ func FileGetModTime(path string) int64 {
 	}
 
 	return fi.ModTime().Unix()
+}
+
+func ReadFileByte(name string) ([]byte, error) {
+	file, err := os.Open(name)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := file.Close(); err != nil {
+			fmt.Println(" file.Close() err:", err)
+		}
+	}()
+
+	if fileByte, err := io.ReadAll(file); err != nil {
+		return nil, err
+	} else {
+		return fileByte, nil
+	}
 }
