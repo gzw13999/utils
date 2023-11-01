@@ -132,23 +132,32 @@ func InStringSlice(islice []string, i string) bool {
 	return false
 }
 
-func StrLen(s string)int{
-	if s==""{
+func StrLen(s string) int {
+	if s == "" {
 		return 0
-	}else{
+	} else {
 		return len([]rune(s))
 	}
 
 }
 
-func Atoi(s string, defaultVal ...int) int {
-
-	if i, err := strconv.Atoi(s); err != nil {
+func Atoi(s any, defaultVal ...int) int {
+	switch s := s.(type) {
+	case string:
+		if i, err := strconv.Atoi(s); err != nil {
+			if len(defaultVal) == 0 {
+				return 0
+			}
+			return defaultVal[0]
+		} else {
+			return i
+		}
+	default:
+		if len(defaultVal) == 0 {
+			return 0
+		}
 		return defaultVal[0]
-	} else {
-		return i
 	}
-
 }
 
 func Itoa(i int) string {
@@ -171,7 +180,6 @@ func Atof32(s string, defaultVal ...float32) float32 {
 		return float32(v)
 	}
 }
-
 
 func Atof64(s string, defaultVal ...float64) float64 {
 	v, err := strconv.ParseFloat(s, 64)
