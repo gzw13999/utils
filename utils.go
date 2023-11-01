@@ -141,7 +141,19 @@ func StrLen(s string) int {
 
 }
 
-func Atoi(s interface{}, defaultVal ...int) int {
+func Atoi(s string, defaultVal ...int) int {
+	if i, err := strconv.Atoi(s); err != nil {
+		if len(defaultVal) == 0 {
+			return 0
+		}
+		return defaultVal[0]
+	} else {
+		return i
+	}
+
+}
+
+func Toi(s interface{}, defaultVal ...int) int {
 	switch s := s.(type) {
 	case string:
 		if i, err := strconv.Atoi(s); err != nil {
