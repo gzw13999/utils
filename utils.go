@@ -152,6 +152,8 @@ func Atoi(s interface{}, defaultVal ...int) int {
 		} else {
 			return i
 		}
+	case int:
+		return s
 	default:
 		if len(defaultVal) == 0 {
 			return 0
@@ -168,6 +170,8 @@ func Atob(s interface{}) bool {
 		} else {
 			return i
 		}
+	case bool:
+		return s
 	default:
 		return false
 	}
