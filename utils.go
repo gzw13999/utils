@@ -141,7 +141,7 @@ func StrLen(s string) int {
 
 }
 
-func Atoi(s any, defaultVal ...int) int {
+func Atoi(s interface{}, defaultVal ...int) int {
 	switch s := s.(type) {
 	case string:
 		if i, err := strconv.Atoi(s); err != nil {
@@ -160,7 +160,7 @@ func Atoi(s any, defaultVal ...int) int {
 	}
 }
 
-func Atob(s any) bool {
+func Atob(s interface{}) bool {
 	switch s := s.(type) {
 	case string:
 		if i, err := strconv.ParseBool(s); err != nil {
