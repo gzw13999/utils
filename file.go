@@ -1,12 +1,12 @@
 package utils
 
 import (
+	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
-	"fmt"
-	"io"
 )
 
 func FileIsExist(path string) bool {
@@ -40,14 +40,13 @@ func FileGetExt(file string) string {
 	return f[1:]
 }
 
-func GetCurrentDir()string{
+func GetCurrentDir() string {
 	if dir, err := filepath.Abs(filepath.Dir(os.Args[0])); err != nil {
 		return ""
 	} else {
 		return strings.Replace(dir, "\\", "/", -1)
 	}
 }
-
 
 func FileGetModTime(path string) int64 {
 	path = strings.Replace(path, "\\", "/", -1)
