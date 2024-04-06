@@ -3,7 +3,6 @@ package utils
 import (
 	"fmt"
 	"math"
-	"os"
 	"strconv"
 	"time"
 )
@@ -98,11 +97,6 @@ func TimeSubDays(t1, t2 time.Time) int {
 		}
 	}
 
-}
-
-func FileExist(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil || os.IsExist(err)
 }
 
 func InIntSlice(s []int, i int) bool {
