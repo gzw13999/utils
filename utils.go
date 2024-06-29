@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
 	"reflect"
@@ -229,55 +228,55 @@ func GetHourDiffer(startTime, endTime string) int64 {
 	}
 }
 
-func AnyToString(v any) (string, error) {
+func AnyToString(v any) string {
 	if v == nil {
-		return "", nil
+		return ""
 	}
 
 	switch v := v.(type) {
 	case string:
-		return v, nil
+		return v
 	case int:
-		return strconv.Itoa(v), nil
+		return strconv.Itoa(v)
 	case int8:
-		return strconv.FormatInt(int64(v), 10), nil
+		return strconv.FormatInt(int64(v), 10)
 	case int16:
-		return strconv.FormatInt(int64(v), 10), nil
+		return strconv.FormatInt(int64(v), 10)
 	case int32:
-		return strconv.FormatInt(int64(v), 10), nil
+		return strconv.FormatInt(int64(v), 10)
 	case int64:
-		return strconv.FormatInt(v, 10), nil
+		return strconv.FormatInt(v, 10)
 	case uint:
-		return strconv.FormatUint(uint64(v), 10), nil
+		return strconv.FormatUint(uint64(v), 10)
 	case uint8:
-		return strconv.FormatUint(uint64(v), 10), nil
+		return strconv.FormatUint(uint64(v), 10)
 	case uint16:
-		return strconv.FormatUint(uint64(v), 10), nil
+		return strconv.FormatUint(uint64(v), 10)
 	case uint32:
-		return strconv.FormatUint(uint64(v), 10), nil
+		return strconv.FormatUint(uint64(v), 10)
 	case uint64:
-		return strconv.FormatUint(v, 10), nil
+		return strconv.FormatUint(v, 10)
 	case float32:
-		return strconv.FormatFloat(float64(v), 'f', -1, 32), nil
+		return strconv.FormatFloat(float64(v), 'f', -1, 32)
 	case float64:
-		return strconv.FormatFloat(v, 'f', -1, 64), nil
+		return strconv.FormatFloat(v, 'f', -1, 64)
 	case bool:
-		return strconv.FormatBool(v), nil
+		return strconv.FormatBool(v)
 	case time.Time:
-		return v.Format(time.RFC3339), nil
+		return v.Format(time.RFC3339)
 	case []byte:
-		return string(v), nil
+		return string(v)
 	case fmt.Stringer:
-		return v.String(), nil
+		return v.String()
 	default:
 		val := reflect.ValueOf(v)
 		switch val.Kind() {
 		case reflect.Slice, reflect.Array:
 			result := "["
 			for i := 0; i < val.Len(); i++ {
-				elemStr, err := AnyToString(val.Index(i).Interface())
-				if err != nil {
-					return "", err
+				elemStr := AnyToString(val.Index(i).Interface())
+				if elemStr == "" {
+					return ""
 				}
 				if i > 0 {
 					result += ","
@@ -285,18 +284,18 @@ func AnyToString(v any) (string, error) {
 				result += elemStr
 			}
 			result += "]"
-			return result, nil
+			return result
 		case reflect.Map:
 			result := "{"
 			keys := val.MapKeys()
 			for i, key := range keys {
-				keyStr, err := AnyToString(key.Interface())
-				if err != nil {
-					return "", err
+				keyStr := AnyToString(key.Interface())
+				if keyStr == "" {
+					return ""
 				}
-				valStr, err := AnyToString(val.MapIndex(key).Interface())
-				if err != nil {
-					return "", err
+				valStr := AnyToString(val.MapIndex(key).Interface())
+				if valStr == "" {
+					return ""
 				}
 				if i > 0 {
 					result += ","
@@ -304,22 +303,37 @@ func AnyToString(v any) (string, error) {
 				result += keyStr + ":" + valStr
 			}
 			result += "}"
-			return result, nil
+			return result
 		case reflect.Struct:
-			// Try using json marshaler for struct as a last resort
-			jsonBytes, err := json.Marshal(v)
-			if err != nil {
-				return "", err
+			// Handle struct by converting each exported field to a string representation
+			result := "{"
+			typeOfS := val.Type()
+			for i := 0; i < val.NumField(); i++ {
+				field := typeOfS.Field(i)
+				if field.PkgPath != "" { // Unexported field
+					continue
+				}
+				fieldName := field.Name
+				fieldValue := val.Field(i).Interface()
+				fieldStr := AnyToString(fieldValue)
+				if fieldStr == "" {
+					return ""
+				}
+				if result != "{" {
+					result += ","
+				}
+				result += fmt.Sprintf("%s:%s", fieldName, fieldStr)
 			}
-			return string(jsonBytes), nil
+			result += "}"
+			return result
 		case reflect.Ptr:
 			if val.IsNil() {
-				return "null", nil
+				return ""
 			}
 			// Recursively convert dereferenced pointer
 			return AnyToString(val.Elem().Interface())
 		default:
-			return "", fmt.Errorf("unsupported value type: %s", reflect.TypeOf(v))
+			return ""
 		}
 	}
 }
