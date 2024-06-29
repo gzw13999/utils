@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"math"
+	"reflect"
 	"strconv"
 	"time"
 )
@@ -224,5 +226,100 @@ func GetHourDiffer(startTime, endTime string) int64 {
 		return hour
 	} else {
 		return hour
+	}
+}
+
+func AnyToString(v any) (string, error) {
+	if v == nil {
+		return "", nil
+	}
+
+	switch v := v.(type) {
+	case string:
+		return v, nil
+	case int:
+		return strconv.Itoa(v), nil
+	case int8:
+		return strconv.FormatInt(int64(v), 10), nil
+	case int16:
+		return strconv.FormatInt(int64(v), 10), nil
+	case int32:
+		return strconv.FormatInt(int64(v), 10), nil
+	case int64:
+		return strconv.FormatInt(v, 10), nil
+	case uint:
+		return strconv.FormatUint(uint64(v), 10), nil
+	case uint8:
+		return strconv.FormatUint(uint64(v), 10), nil
+	case uint16:
+		return strconv.FormatUint(uint64(v), 10), nil
+	case uint32:
+		return strconv.FormatUint(uint64(v), 10), nil
+	case uint64:
+		return strconv.FormatUint(v, 10), nil
+	case float32:
+		return strconv.FormatFloat(float64(v), 'f', -1, 32), nil
+	case float64:
+		return strconv.FormatFloat(v, 'f', -1, 64), nil
+	case bool:
+		return strconv.FormatBool(v), nil
+	case time.Time:
+		return v.Format(time.RFC3339), nil
+	case []byte:
+		return string(v), nil
+	case fmt.Stringer:
+		return v.String(), nil
+	default:
+		val := reflect.ValueOf(v)
+		switch val.Kind() {
+		case reflect.Slice, reflect.Array:
+			result := "["
+			for i := 0; i < val.Len(); i++ {
+				elemStr, err := AnyToString(val.Index(i).Interface())
+				if err != nil {
+					return "", err
+				}
+				if i > 0 {
+					result += ","
+				}
+				result += elemStr
+			}
+			result += "]"
+			return result, nil
+		case reflect.Map:
+			result := "{"
+			keys := val.MapKeys()
+			for i, key := range keys {
+				keyStr, err := AnyToString(key.Interface())
+				if err != nil {
+					return "", err
+				}
+				valStr, err := AnyToString(val.MapIndex(key).Interface())
+				if err != nil {
+					return "", err
+				}
+				if i > 0 {
+					result += ","
+				}
+				result += keyStr + ":" + valStr
+			}
+			result += "}"
+			return result, nil
+		case reflect.Struct:
+			// Try using json marshaler for struct as a last resort
+			jsonBytes, err := json.Marshal(v)
+			if err != nil {
+				return "", err
+			}
+			return string(jsonBytes), nil
+		case reflect.Ptr:
+			if val.IsNil() {
+				return "null", nil
+			}
+			// Recursively convert dereferenced pointer
+			return AnyToString(val.Elem().Interface())
+		default:
+			return "", fmt.Errorf("unsupported value type: %s", reflect.TypeOf(v))
+		}
 	}
 }
